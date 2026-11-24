@@ -11,7 +11,7 @@ namespace TaskTrackerApi.IntegrationTests;
 public class CorsPolicyTests
 {
     [Theory]
-    [InlineData("http://localhost:4200")]
+    // [InlineData("http://localhost:4200")] // Can be uncommented locally for development
     [InlineData("https://goldfish-app-zhi87.ondigitalocean.app")]
     public async Task Preflight_FromAllowedOrigin_IsNotRedirected_AndEchoesOrigin(string origin)
     {
@@ -59,12 +59,12 @@ public class CorsPolicyTests
         {
             Content = JsonContent.Create(new { Text = "x", Day = "2026-11-05T10:00", Reminder = true })
         };
-        request.Headers.Add("Origin", "http://localhost:4200");
+        request.Headers.Add("Origin", "https://goldfish-app-zhi87.ondigitalocean.app");
 
         var response = await client.SendAsync(request);
 
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         response.Headers.TryGetValues("Access-Control-Allow-Origin", out var allowOrigin).Should().BeTrue();
-        allowOrigin!.Should().Contain("http://localhost:4200");
+        allowOrigin!.Should().Contain("https://goldfish-app-zhi87.ondigitalocean.app");
     }
 }
